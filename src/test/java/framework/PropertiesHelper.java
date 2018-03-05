@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class PropertiesHelper extends BaseEntity {
-    private static final String PROPERTY_PATH = "src/test/java/resources/";
+    private static final String PROPERTY_PATH = "src/test/resources/";
     private String propertyFileName;
 
     public PropertiesHelper(String propertyFileName){
