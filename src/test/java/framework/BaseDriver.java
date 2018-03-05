@@ -8,33 +8,40 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import java.io.File;
 import java.net.URL;
 
-public class BaseDriver {
+public class BaseDriver extends BaseEntity{
     private static BaseDriver instance;
+    private static final String APP_PATH = "src/test/resources/apps/";
+    private PropertiesHelper appiumProperty;
     private WebDriver driver;
 
     private BaseDriver(){
+        appiumProperty = new PropertiesHelper("appium.properties");
         initDriver();
     }
 
-    public static BaseDriver getInstance(){
+    public static synchronized BaseDriver getInstance(){
         if(instance == null){
             instance = new BaseDriver();
         }
         return instance;
     }
 
-    private void initDriver(){
-        File app = new File("src/test/resources/apps/Recipes.app");
+    private DesiredCapabilities createCapability(){
+        File app = new File(APP_PATH + appiumProperty.getProperty("appName"));
         DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability(MobileCapabilityType.BROWSER_NAME, "");
-        capabilities.setCapability(MobileCapabilityType.APPIUM_VERSION, "1.7.2");
-        capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, "11.2");
-        capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "iPhone 8 Plus");
+        capabilities.setCapability(MobileCapabilityType.APPIUM_VERSION, appiumProperty.getProperty("appiumVersion"));
+        capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, appiumProperty.getProperty("platformVersion"));
+        capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, appiumProperty.getProperty("deviceName"));
         capabilities.setCapability(MobileCapabilityType.APP, app.getAbsolutePath());
+        return capabilities;
+    }
+
+    private void initDriver(){
         try {
-            driver = new IOSDriver<MobileElement>(new URL("http://0.0.0.0:4723/wd/hub"), capabilities);
+            URL appiumServerUrl = new URL(appiumProperty.getProperty("appiumServerUrl"));
+            driver = new IOSDriver<MobileElement>(appiumServerUrl, createCapability());
         }catch (Exception e){
-            e.printStackTrace();
+            assertFail("Cannot init driver: " + e.getMessage());
         }
     }
 
