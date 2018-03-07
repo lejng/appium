@@ -12,7 +12,8 @@ import java.io.IOException;
 import java.net.URL;
 
 public class BaseDriver extends BaseEntity {
-    private static final String COMMAND_TEMPLATE_START_APPIUM = "cmd.exe /c start cmd.exe /k \"appium --address %s --port %s\"";
+    private static final String COMMAND_TEMPLATE_START_WIN_CMD = "cmd.exe /c start cmd.exe /k \"%s\"";
+    private static final String COMMAND_TEMPLATE_START_APPIUM = "appium --address %s --port %s";
     private static final String APP_PATH = "src/test/resources/apps/";
     private static final String APPIUM_UTL_TEMPLATE = "http://%s:%s/wd/hub";
     private static BaseDriver instance;
@@ -59,11 +60,13 @@ public class BaseDriver extends BaseEntity {
     }
 
     public void stopAppiumServer() {
-        try {
-            Runtime.getRuntime().exec("taskkill /F /IM node.exe");
-            Runtime.getRuntime().exec("taskkill /F /IM cmd.exe");
-        } catch (IOException e) {
-            logError("Error to stop appium server: " + e.getMessage());
+        if(getOS().contains("win")) {
+            try {
+                Runtime.getRuntime().exec("taskkill /F /IM node.exe");
+                Runtime.getRuntime().exec("taskkill /F /IM cmd.exe");
+            } catch (IOException e) {
+                logError("Error to stop appium server: " + e.getMessage());
+            }
         }
     }
 
@@ -71,8 +74,17 @@ public class BaseDriver extends BaseEntity {
         String command = String.format(COMMAND_TEMPLATE_START_APPIUM,
                 appiumProperty.getProperty("appiumServerAddress"),
                 appiumProperty.getProperty("appiumServerPort"));
-        Runtime.getRuntime().exec(command);
+        if(getOS().contains("win")){
+            Runtime.getRuntime().exec(String.format(COMMAND_TEMPLATE_START_WIN_CMD, command));
+        }
+        else if(getOS().contains("mac") || getOS().contains("unix")){
+            Runtime.getRuntime().exec(COMMAND_TEMPLATE_START_APPIUM);
+        }
         SmartWait.sleep(SmartWait.Time.TEN_SECONDS);
+    }
+
+    private String getOS(){
+        return System.getProperty("os.name").toLowerCase();
     }
 
     private URL getAppiumUrl() throws Exception {
