@@ -78,7 +78,7 @@ public class BaseDriver extends BaseEntity {
             Runtime.getRuntime().exec(String.format(COMMAND_TEMPLATE_START_WIN_CMD, command));
         }
         else if(getOS().contains("mac") || getOS().contains("unix")){
-            Runtime.getRuntime().exec(COMMAND_TEMPLATE_START_APPIUM);
+            Runtime.getRuntime().exec(command);
         }
         SmartWait.sleep(SmartWait.Time.TEN_SECONDS);
     }
