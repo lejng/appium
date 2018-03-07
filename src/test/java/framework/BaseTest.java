@@ -22,6 +22,7 @@ public abstract class BaseTest extends BaseEntity {
     @AfterClass
     public void tearDown() throws Exception {
         BaseDriver.getInstance().getDriver().quit();
+        BaseDriver.getInstance().stopAppiumServer();
         logInfo(String.format(STEP_MESSAGE_TEMPLATE, "END TEST"));
     }
 

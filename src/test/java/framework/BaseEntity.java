@@ -11,11 +11,18 @@ public abstract class BaseEntity {
     }
 
     public void logError(String message){
-        logger.error(message);
+        logger.warn(message);
     }
 
     public void assertFail(String message){
         logError(message);
         Assert.fail(message);
+    }
+
+    public void assertTrue(Boolean condition, String message){
+        if(!condition) {
+            logError(message);
+        }
+        Assert.assertTrue(condition, message);
     }
 }

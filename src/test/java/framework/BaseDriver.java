@@ -1,5 +1,6 @@
 package framework;
 
+import framework.utils.SmartWait;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
@@ -7,11 +8,14 @@ import io.appium.java_client.remote.MobileCapabilityType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 
-public class BaseDriver extends BaseEntity{
-    private static BaseDriver instance;
+public class BaseDriver extends BaseEntity {
+    private static final String COMMAND_TEMPLATE_START_APPIUM = "cmd.exe /c start cmd.exe /k \"appium --address %s --port %s\"";
     private static final String APP_PATH = "src/test/resources/apps/";
+    private static final String APPIUM_UTL_TEMPLATE = "http://%s:%s/wd/hub";
+    private static BaseDriver instance;
     private PropertiesHelper appiumProperty;
     private WebDriver driver;
 
@@ -39,32 +43,51 @@ public class BaseDriver extends BaseEntity{
 
     private void initDriver(){
         String platform = appiumProperty.getProperty("platform");
-        switch (platform){
-            case "Android":
-                initAndroidDriver();
-                break;
-            case "iOS":
-                initIOSDriver();
-                break;
+        try {
+            startAppiumServer();
+            switch (platform) {
+                case "Android":
+                    initAndroidDriver();
+                    break;
+                case "iOS":
+                    initIOSDriver();
+                    break;
+            }
+        }catch (Exception e){
+            assertFail("Cannot create driver: " + e.getMessage());
         }
     }
 
-    private void initIOSDriver(){
+    public void stopAppiumServer() {
         try {
-            URL appiumServerUrl = new URL(appiumProperty.getProperty("appiumServerUrl"));
-            driver = new IOSDriver<MobileElement>(appiumServerUrl, createCapability());
-        }catch (Exception e){
-            assertFail("Cannot init ios driver: " + e.getMessage());
+            Runtime.getRuntime().exec("taskkill /F /IM node.exe");
+            Runtime.getRuntime().exec("taskkill /F /IM cmd.exe");
+        } catch (IOException e) {
+            logError("Error to stop appium server: " + e.getMessage());
         }
     }
 
-    private void initAndroidDriver(){
-        try {
-            URL appiumServerUrl = new URL(appiumProperty.getProperty("appiumServerUrl"));
-            driver = new AndroidDriver<MobileElement>(appiumServerUrl, createCapability());
-        }catch (Exception e){
-            assertFail("Cannot init android driver: " + e.getMessage());
-        }
+    private void startAppiumServer() throws Exception {
+        String command = String.format(COMMAND_TEMPLATE_START_APPIUM,
+                appiumProperty.getProperty("appiumServerAddress"),
+                appiumProperty.getProperty("appiumServerPort"));
+        Runtime.getRuntime().exec(command);
+        SmartWait.sleep(SmartWait.Time.TEN_SECONDS);
+    }
+
+    private URL getAppiumUrl() throws Exception {
+        URL appiumServerUrl = new URL(String.format(APPIUM_UTL_TEMPLATE,
+                appiumProperty.getProperty("appiumServerAddress"),
+                appiumProperty.getProperty("appiumServerPort")));
+        return appiumServerUrl;
+    }
+
+    private void initIOSDriver() throws Exception {
+        driver = new IOSDriver<MobileElement>(getAppiumUrl(), createCapability());
+    }
+
+    private void initAndroidDriver() throws Exception {
+        driver = new AndroidDriver<MobileElement>(getAppiumUrl(), createCapability());
     }
 
     public WebDriver getDriver(){
