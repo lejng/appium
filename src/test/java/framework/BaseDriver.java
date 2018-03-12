@@ -40,19 +40,22 @@ public class BaseDriver extends BaseEntity {
     }
 
     private void initDriver(){
-        String platform = appiumProperty.getProperty("platform");
         try {
-            switch (platform) {
-                case "Android":
+            switch (getPlatform()) {
+                case Android:
                     initAndroidDriver();
                     break;
-                case "iOS":
+                case iOS:
                     initIOSDriver();
                     break;
             }
         }catch (Exception e){
             assertFail("Cannot create driver: " + e.getMessage());
         }
+    }
+
+    public Platform getPlatform(){
+        return Platform.valueOf(appiumProperty.getProperty("platform"));
     }
 
     private void initIOSDriver() throws Exception {
@@ -72,7 +75,21 @@ public class BaseDriver extends BaseEntity {
         return AppiumDriverLocalService.buildService(builder);
     }
 
+    public void closeSimulatorIOS(){
+        String kill[] = {"killall","Simulator"};
+        try {
+            Runtime.getRuntime().exec(kill);
+        }catch (Exception e){
+            logError("Cannot close ios simulator: " + e.getMessage());
+        }
+    }
+
     public WebDriver getDriver(){
         return driver;
+    }
+
+    public enum Platform{
+        Android,
+        iOS
     }
 }

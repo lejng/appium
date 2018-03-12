@@ -21,7 +21,11 @@ public abstract class BaseTest extends BaseEntity {
 
     @AfterClass
     public void tearDown() throws Exception {
-        BaseDriver.getInstance().getDriver().quit();
+        BaseDriver driver = BaseDriver.getInstance();
+        driver.getDriver().quit();
+        if(driver.getPlatform() == BaseDriver.Platform.iOS){
+            driver.closeSimulatorIOS();
+        }
         logInfo(String.format(STEP_MESSAGE_TEMPLATE, "END TEST"));
     }
 
