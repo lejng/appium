@@ -10,13 +10,19 @@ public abstract class BaseTest extends BaseEntity {
 
     @BeforeClass
     public void setUp() throws Exception {
-        logInfo(String.format(STEP_MESSAGE_TEMPLATE, "START TEST"));
         BaseDriver.getInstance();
     }
 
     @Test
     public void test() throws Throwable {
-        runTest();
+        try {
+            logInfo(String.format("=====================  Test case: '%s' =====================", getClass()));
+            runTest();
+            logInfo(String.format("********************* Test case: '%s' Passed! *************", getClass()));
+        }catch (Exception e){
+            logError(">>>>>>>> TEST FAILED <<<<<<<<");
+            throw e;
+        }
     }
 
     @AfterClass
@@ -26,7 +32,6 @@ public abstract class BaseTest extends BaseEntity {
         if(driver.getPlatform() == BaseDriver.Platform.iOS){
             driver.closeSimulatorIOS();
         }
-        logInfo(String.format(STEP_MESSAGE_TEMPLATE, "END TEST"));
     }
 
     public void logStep(String message, int number){
