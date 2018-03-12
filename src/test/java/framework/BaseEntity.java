@@ -11,7 +11,7 @@ public abstract class BaseEntity {
     }
 
     public void logError(String message){
-        logger.warn(message);
+        logger.warn("!!!! FAIL :: " + message);
     }
 
     public void assertFail(String message){
