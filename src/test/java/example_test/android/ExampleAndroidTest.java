@@ -8,13 +8,15 @@ import org.openqa.selenium.By;
 public class ExampleAndroidTest extends BaseTest {
     @Override
     public void runTest() {
-        logStep("Click by button");
-        Button btbAccept = new Button(By.id("btn_one"),"Accept");
-        btbAccept.click();
+        logStep("Skip start windows");
+        new Button(By.id("btn_one"),"Accept").click();
         new Button(By.id("button2"),"Accept").click();
         new Button(By.id("button2"),"Accept").click();
         new Button(By.id("button1"),"Accept").click();
+
+        logStep("Enter text 'Astro' in text field search");
         AstroPage astroPage = new AstroPage();
-        astroPage.getBtbLocations().click();
+        astroPage.getTextViewSearch().click();
+        astroPage.getTextFieldSearch().typeText("Astro");
     }
 }

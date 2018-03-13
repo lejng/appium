@@ -12,10 +12,6 @@ public class SmartWait {
         return false;
     }
 
-    public static boolean waitFor(Condition condition){
-        return waitFor(condition, Time.ONE_MINUTE, Time.FIVE_SECONDS);
-    }
-
     public static void sleep(Time duration){
         try{
             Thread.sleep(duration.getTime());
