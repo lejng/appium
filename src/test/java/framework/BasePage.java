@@ -18,7 +18,7 @@ public abstract class BasePage extends BaseEntity {
     }
 
     public void waitIsPageExist(){
-        SmartWait.waitFor(() -> isPageExist(), SmartWait.Time.TEN_SECONDS, SmartWait.Time.ONE_SECONDS);
+        SmartWait.waitFor(() -> isPageExist(), SmartWait.Time.TEN_SECONDS.getTime(), SmartWait.Time.ONE_SECONDS.getTime());
     }
 
     public void AssertPageExist(){

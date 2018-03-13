@@ -21,7 +21,11 @@ public abstract class BaseElement extends BaseEntity{
     }
 
     public void waitForElementExist(){
-        SmartWait.waitFor(() -> isElementExist(), SmartWait.Time.TEN_SECONDS, SmartWait.Time.ONE_SECONDS);
+        waitForElementExist(SmartWait.Time.TEN_SECONDS.getTime());
+    }
+
+    public void waitForElementExist(int timeout){
+        SmartWait.waitFor(() -> isElementExist(), timeout, SmartWait.Time.ONE_SECONDS.getTime());
     }
 
     protected void initElement(){
@@ -43,7 +47,9 @@ public abstract class BaseElement extends BaseEntity{
     public String getText(){
         initElement();
         logInfo(String.format("%s '%s' :: Getting text", getElementType(), name));
-        return element.getText();
+        String text = element.getText();
+        logInfo(String.format("%s '%s' :: text = '%s'", getElementType(), name, text));
+        return text;
     }
 
     public String getElementType(){
