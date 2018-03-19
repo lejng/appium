@@ -7,6 +7,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 public abstract class BaseElement extends BaseEntity{
+    protected static final int DEFAULT_TIMEOUT_FOR_WAIT_ELEMENT = 20000;
     protected String name;
     protected By locator;
     protected WebElement element;
@@ -21,11 +22,11 @@ public abstract class BaseElement extends BaseEntity{
     }
 
     public void waitForElementExist(){
-        waitForElementExist(SmartWait.Time.TEN_SECONDS.getTime());
+        waitForElementExist(DEFAULT_TIMEOUT_FOR_WAIT_ELEMENT);
     }
 
     public void waitForElementExist(int timeout){
-        SmartWait.waitFor(() -> isElementExist(), timeout, SmartWait.Time.ONE_SECONDS.getTime());
+        SmartWait.waitFor(() -> isElementExist(), timeout, SmartWait.DEFAULT_DURATION);
     }
 
     protected void initElement(){

@@ -6,6 +6,7 @@ import org.testng.annotations.Test;
 
 public abstract class BaseTest extends BaseEntity {
     private static final String STEP_MESSAGE_TEMPLATE = "-----==[ %s ]==-----";
+    private static final String TEST_START_END_SEPARATOR = "*";
     protected int stepNumber = 1;
 
     @BeforeClass
@@ -16,13 +17,23 @@ public abstract class BaseTest extends BaseEntity {
     @Test
     public void test() throws Throwable {
         try {
-            logInfo(String.format("=====================  Test case: '%s' =====================", getClass()));
+            wrapLogMessage(String.format("*********************  Start Test case: '%s' ********************", getClass()));
             runTest();
-            logInfo(String.format("********************* Test case: '%s' Passed! *************", getClass()));
+            wrapLogMessage(String.format("********************* End Test case: '%s' Passed! ***************", getClass()));
         }catch (Exception e){
             logError(">>>>>>>> TEST FAILED <<<<<<<<");
             throw e;
         }
+    }
+
+    private void wrapLogMessage(String message){
+        String line = "";
+        for(int i = 0; i < message.length(); i++){
+            line += TEST_START_END_SEPARATOR;
+        }
+        logInfo(line);
+        logInfo(message);
+        logInfo(line);
     }
 
     @AfterClass

@@ -1,6 +1,7 @@
 package framework.utils;
 
 public class SmartWait {
+    public static final int DEFAULT_DURATION = 1000;
 
     public static boolean waitFor(Condition condition, int timeout, int duration) {
         for(int time = 0; time < timeout; time += duration){
@@ -22,21 +23,5 @@ public class SmartWait {
 
     public interface Condition {
         boolean isSuccess();
-    }
-
-    public enum Time {
-        ONE_MINUTE(60000),
-        ONE_SECONDS(1000),
-        TEN_SECONDS(10000),
-        FIVE_SECONDS(5000);
-
-        private int time;
-        Time(int time){
-            this.time = time;
-        }
-
-        public int getTime(){
-            return time;
-        }
     }
 }

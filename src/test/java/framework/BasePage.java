@@ -4,6 +4,7 @@ import framework.utils.SmartWait;
 import org.openqa.selenium.By;
 
 public abstract class BasePage extends BaseEntity {
+    protected static final int DEFAULT_TIMEOUT_FOR_WAIT_PAGE_EXIST= 20000;
     protected By uniqueLocator;
     protected String name;
 
@@ -18,7 +19,7 @@ public abstract class BasePage extends BaseEntity {
     }
 
     public void waitIsPageExist(){
-        SmartWait.waitFor(() -> isPageExist(), SmartWait.Time.TEN_SECONDS.getTime(), SmartWait.Time.ONE_SECONDS.getTime());
+        SmartWait.waitFor(() -> isPageExist(), DEFAULT_TIMEOUT_FOR_WAIT_PAGE_EXIST, SmartWait.DEFAULT_DURATION);
     }
 
     public void AssertPageExist(){
