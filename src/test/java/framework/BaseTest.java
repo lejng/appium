@@ -22,9 +22,9 @@ public abstract class BaseTest extends BaseEntity {
             wrapLogMessage(String.format("********************* End Test case: '%s' Passed! ***************", getClass()));
         }catch (Exception e){
             logError(">>>>>>>> TEST FAILED <<<<<<<<");
-            logInfo("\n");
             throw e;
         }
+        logInfo("\n");
     }
 
     private void wrapLogMessage(String message){
