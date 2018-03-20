@@ -12,6 +12,8 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import java.io.File;
 
 public class BaseDriver extends BaseEntity {
+    public final int DEFAULT_TIMEOUT_FOR_WAIT_ELEMENT;
+    public final int DEFAULT_TIMEOUT_FOR_WAIT_PAGE_EXIST;
     private static final String APP_PATH = "src/test/resources/apps/";
     private static BaseDriver instance;
     private PropertiesHelper appiumProperty;
@@ -20,6 +22,8 @@ public class BaseDriver extends BaseEntity {
     private BaseDriver(){
         appiumProperty = new PropertiesHelper("appium.properties");
         initDriver();
+        DEFAULT_TIMEOUT_FOR_WAIT_ELEMENT = appiumProperty.getProperty("defaultTimeoutForWaitElement",20000);
+        DEFAULT_TIMEOUT_FOR_WAIT_PAGE_EXIST = appiumProperty.getProperty("defaultTimeoutForWaitPageExist",20000);
     }
 
     public static synchronized BaseDriver getInstance(){

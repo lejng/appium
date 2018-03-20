@@ -24,4 +24,16 @@ public class PropertiesHelper extends BaseEntity {
         }
         return null;
     }
+
+    public String getProperty(String name, String defaultValue){
+        String result = getProperty(name);
+        if(result == null){
+            return result;
+        }
+        return defaultValue;
+    }
+
+    public int getProperty(String name, int defaultValue){
+        return Integer.parseInt(getProperty(name, String.valueOf(defaultValue)));
+    }
 }
