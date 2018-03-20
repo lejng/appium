@@ -62,13 +62,15 @@ public class BaseDriver extends BaseEntity {
         return Platform.valueOf(appiumProperty.getProperty("platform"));
     }
 
-    private void initIOSDriver() throws Exception {
+    private void initIOSDriver(){
         driver = new IOSDriver<MobileElement>(startAppiumServer(), createCapability());
     }
 
-    private void initAndroidDriver() throws Exception {
+    private void initAndroidDriver(){
         DesiredCapabilities capabilities = createCapability();
-        capabilities.setCapability(AndroidMobileCapabilityType.AVD, appiumProperty.getProperty("avd"));
+        if(appiumProperty.getProperty("useAvd").equals("true")) {
+            capabilities.setCapability(AndroidMobileCapabilityType.AVD, appiumProperty.getProperty("avd"));
+        }
         driver = new AndroidDriver<MobileElement>(startAppiumServer(), capabilities);
     }
 

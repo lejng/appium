@@ -38,7 +38,7 @@ public abstract class BaseTest extends BaseEntity {
     }
 
     @AfterClass
-    public void tearDown() throws Exception {
+    public void tearDown(){
         BaseDriver driver = BaseDriver.getInstance();
         driver.getDriver().quit();
         if(driver.getPlatform() == BaseDriver.Platform.iOS){
