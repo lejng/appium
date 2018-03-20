@@ -25,4 +25,11 @@ public abstract class BaseEntity {
         }
         Assert.assertTrue(condition, message);
     }
+
+    public void assertNull(Object object, String message){
+        if(object != null) {
+            logError(message);
+        }
+        Assert.assertNull(object, message);
+    }
 }

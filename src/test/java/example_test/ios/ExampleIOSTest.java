@@ -23,5 +23,15 @@ public class ExampleIOSTest extends BaseTest {
         logStep(String.format("Check recipe was added with name: '%s'", recipeName));
         RecipePage recipePage = new RecipePage(By.name(recipeName), recipeName);
         assertTrue(recipeName.equals(recipePage.getTextViewRecipeName().getText()),"Recipe added is not correct");
+
+        logStep("Open recipes page");
+        recipePage.getBtbRecipes().click();
+
+        logStep(String.format("Delete recipe with name: '%s'", recipeName));
+        recipesPage = new RecipesPage();
+        recipesPage.deleteRecipeByName(recipeName);
+        assertTrue(!recipesPage.getRecipeByText(recipeName).isElementExist(),String.format("Recipe with name '%s' is not delete", recipeName));
+
+
     }
 }
